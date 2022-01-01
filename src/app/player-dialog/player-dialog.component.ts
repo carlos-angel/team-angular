@@ -13,7 +13,7 @@ import { TeamService } from '../services/team.service';
   styleUrls: ['./player-dialog.component.scss'],
 })
 export class PlayerDialogComponent implements OnInit {
-  private team: Team | undefined;
+  private team: Team;
   public countries = Object.keys(Countries).map((key) => ({ label: key, key: key.indexOf }));
   public squadNumber = Object.keys(SquadNumber)
     .slice(Object.keys(SquadNumber).length / 2)
@@ -35,19 +35,17 @@ export class PlayerDialogComponent implements OnInit {
   private newPlayer(playerFormValue: Player) {
     const key = this.playerService.addPlayer(playerFormValue).key;
     if (key) {
-      const playerFormValueKey: Player = {
+      const playerFormValueKey = {
         ...playerFormValue,
-        $key: key,
+        key,
       };
 
-      if (this.team) {
-        const formattedTeam: Team = {
-          ...this.team,
-          players: [...(this.team.players ? this.team.players : []), playerFormValueKey],
-        };
+      const formattedTeam: Team = {
+        ...this.team,
+        players: [...(this.team.players ? this.team.players : []), playerFormValueKey],
+      };
 
-        this.teamService.editTeam(formattedTeam);
-      }
+      this.teamService.editTeam(formattedTeam);
     }
   }
 
