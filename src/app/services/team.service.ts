@@ -35,6 +35,7 @@ export class TeamService {
     if (changes.$key) {
       const $key = changes.$key;
       delete changes.$key;
+      console.log('changes', changes);
       this.db.list('/teams').update($key, changes);
     }
   }
