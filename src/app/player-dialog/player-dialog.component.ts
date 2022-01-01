@@ -14,10 +14,10 @@ import { TeamService } from '../services/team.service';
 })
 export class PlayerDialogComponent implements OnInit {
   private team: Team;
-  public countries = Object.keys(Countries).map((key) => ({ label: key, key: key.indexOf }));
-  public squadNumber = Object.keys(SquadNumber)
-    .slice(Object.keys(SquadNumber).length / 2)
-    .map((key) => ({ label: key, key: key.indexOf }));
+  public countries = Object.entries(Countries).map((item) => ({ label: item[0], key: item[1] }));
+  public squadNumber = Object.entries(SquadNumber)
+    .slice(Object.entries(SquadNumber).length / 2)
+    .map((item) => ({ label: item[0], key: item[1] }));
 
   constructor(private playerService: PlayerService, private teamService: TeamService) {}
 
