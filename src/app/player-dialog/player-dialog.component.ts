@@ -51,9 +51,10 @@ export class PlayerDialogComponent implements OnInit {
 
   onSubmit(playerForm: NgForm) {
     const playerFormValue = { ...playerForm.value };
-    if (playerForm.valid) {
-      playerFormValue.leftFooted = playerFormValue.leftFooted === '' ? false : playerFormValue.leftFooted;
-    }
+
+    playerFormValue.leftFooted =
+      playerFormValue.leftFooted === '' || playerFormValue.leftFooted === undefined ? false : playerFormValue.leftFooted;
+
     this.newPlayer(playerFormValue);
     window.location.replace('#');
   }
