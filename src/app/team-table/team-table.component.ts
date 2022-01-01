@@ -14,9 +14,7 @@ export class TeamTableComponent implements OnInit {
   public teams$: Observable<Team[]>;
   public tableHeaders = TeamsTableHeaders;
 
-  constructor(private teamService: TeamService) {
-    this.teams$ = this.teamService.getTeams();
-  }
+  constructor(private teamService: TeamService) {}
 
   ngOnInit(): void {
     this.teams$ = this.teamService.getTeams();
