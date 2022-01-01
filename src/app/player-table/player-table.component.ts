@@ -10,12 +10,11 @@ import { PlayerService } from '../services/player.service';
 })
 export class PlayerTableComponent implements OnInit {
   public players$: Observable<Player[]>;
-  public selectedPlayer: Player | null;
+  public selectedPlayer: Player;
   public showModal: boolean = false;
 
   constructor(private playerService: PlayerService) {
     this.players$ = this.playerService.getPlayers();
-    this.selectedPlayer = null;
   }
 
   ngOnInit(): void {}
@@ -26,5 +25,17 @@ export class PlayerTableComponent implements OnInit {
     setTimeout(() => {
       window.location.replace('#open-modal');
     }, 0);
+  }
+
+  editPlayer(player: Player) {
+    this.selectedPlayer = { ...player };
+    this.showModal = true;
+    setTimeout(() => {
+      window.location.replace('#open-modal');
+    }, 0);
+  }
+
+  closeDialog() {
+    this.showModal = false;
   }
 }

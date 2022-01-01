@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { take } from 'rxjs/operators';
 import { Countries } from '../interfaces/nationalities.enum';
@@ -13,6 +13,8 @@ import { TeamService } from '../services/team.service';
   styleUrls: ['./player-dialog.component.scss'],
 })
 export class PlayerDialogComponent implements OnInit {
+  @Input() player: Player;
+  @Output() closeDialog: EventEmitter<boolean> = new EventEmitter();
   private team: Team;
   public countries = Object.entries(Countries).map((item) => ({ label: item[0], key: item[1] }));
   public squadNumber = Object.entries(SquadNumber)
@@ -49,13 +51,40 @@ export class PlayerDialogComponent implements OnInit {
     }
   }
 
+  private editPlayer(playerFormValue: Player) {
+    const playerFormValueWithKey = { ...playerFormValue, $key: this.player.$key };
+    const playerFormValueFormattedKey = { ...playerFormValue, key: this.player.$key };
+    delete playerFormValueFormattedKey.$key;
+
+    const modifiedPlayers = this.team.players
+      ? this.team.players.map((player) => (player.$key === this.player.$key ? playerFormValueFormattedKey : player))
+      : this.team.players;
+
+    const formattedTeam: Team = {
+      ...this.team,
+      players: [...modifiedPlayers],
+    };
+
+    this.playerService.editPlayer(playerFormValueWithKey);
+    this.teamService.editTeam(formattedTeam);
+  }
+
   onSubmit(playerForm: NgForm) {
     const playerFormValue = { ...playerForm.value };
 
     playerFormValue.leftFooted =
       playerFormValue.leftFooted === '' || playerFormValue.leftFooted === undefined ? false : playerFormValue.leftFooted;
 
-    this.newPlayer(playerFormValue);
+    if (this.player) {
+      this.editPlayer(playerFormValue);
+    } else {
+      this.newPlayer(playerFormValue);
+    }
+
     window.location.replace('#');
+  }
+
+  onClose() {
+    this.closeDialog.emit(true);
   }
 }
